@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const ejs = require("ejs");
 
 const mongoose = require("mongoose");
 const Animal = require("./animal");
@@ -13,13 +14,15 @@ mongoose
     console.log(e);
   });
 
+app.set("view engine", "ejs");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/animals", async (req, res) => {
   try {
     let animalData = await Animal.find({}).exec();
-    return res.send(animalData);
+    return res.render("index", { animalData });
   } catch (e) {
     return res.status(500).send("搜尋資料發生錯誤");
   }
@@ -104,6 +107,6 @@ app.delete("/animals/:_id", async (req, res) => {
   }
 });
 
-app.listen(3000, (req, res) => {
+app.listen(3999, (req, res) => {
   console.log("伺服器運行中");
 });
